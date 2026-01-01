@@ -6,19 +6,31 @@ const UploadImage = async (req, res) => {
     try {
 
         const { title, description, tag } = req.body;
-        const image = req.file;
-        let uploadImage;
 
-        if (image) {
+        let images = req.files;
 
-            const base64Pdf = `data:${image.mimetype};base64,${image.buffer.toString("base64")}`;
+        let imageArray = [];
 
-            uploadImage = await cloudinary.uploader.upload(base64Pdf, {
-                resource_type: "auto",
-                folder: "uploads/images"
-            });
+        if (images && images.length > 0) {
 
-        }else{
+            for (const image of images) {
+
+                const base64Pdf = `data:${image.mimetype};base64,${image.buffer.toString("base64")}`;
+
+                const uploadImage = await cloudinary.uploader.upload(base64Pdf, {
+                    resource_type: "auto",
+                    folder: "uploads/images"
+                });
+
+                imageArray.push(
+                    {
+                        imageUrl: uploadImage.secure_url,
+                        publicId: uploadImage.public_id
+                    }
+                )
+            }
+
+        } else {
 
             console.log("No file uploaded");
         }
@@ -26,16 +38,13 @@ const UploadImage = async (req, res) => {
         //console.log(uploadImage);
 
         const newMedia = new Media({
-
             title: title,
             description: description,
-            imageUrl: uploadImage.secure_url,
-            publicId: uploadImage.public_id,
-            tag: tag
+            tag: tag,
+            images: imageArray
         });
 
         newMedia.save();
-
 
         res.status(200).json(
             {
@@ -58,36 +67,45 @@ const UpdateMedia = async (req, res) => {
     try {
         const { id } = req.params; // Get ID from URL
         const { title, description, tag } = req.body;
-        const newImageFile = req.file;
 
-        // 1. Find the existing media in Database
+        const newImages = req.files;
+
+        let imageArray = [];
+
+        // Find the existing media in Database
         let media = await Media.findById(id);
+
         if (!media) {
-            return res.status(404).json({ message: "Media not found" });
+            return res.status(404).json(
+                { message: "Media not found" }
+            );
         }
 
-        if (newImageFile) {
-            // Delete old image from Cloudinary using its publicId
-            if (media.publicId) {
-                await cloudinary.uploader.destroy(media.publicId);
+        if (newImages && newImages.length > 0) {
+
+            for(const image of newImages){
+
+                const base64Pdf = `data:${image.mimetype};base64,${image.buffer.toString("base64")}`;
+
+                const uploadImage = await cloudinary.uploader.upload(base64Pdf, {
+                    resource_type: "auto",
+                    folder: "uploads/images"
+                });
+
+                imageArray.push(
+                    {
+                        imageUrl: uploadImage.secure_url,
+                        publicId: uploadImage.public_id
+                    }
+                );
             }
-
-            // Upload the new image
-            const base64Image = `data:${newImageFile.mimetype};base64,${newImageFile.buffer.toString("base64")}`;
-            const uploadResponse = await cloudinary.uploader.upload(base64Image, {
-                resource_type: "auto",
-                folder: "uploads/images"
-            });
-
-            // Update image-related fields
-            media.imageUrl = uploadResponse.secure_url;
-            media.publicId = uploadResponse.public_id;
         }
 
         // 3. Update metadata fields (only if they are provided in request)
         media.title = title || media.title;
         media.description = description || media.description;
         media.tag = tag || media.tag;
+        media.images = imageArray || media.images;
 
         // 4. Save the updated document
         const updatedMedia = await media.save();
