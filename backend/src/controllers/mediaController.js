@@ -5,20 +5,34 @@ const UploadImage = async (req, res) => {
 
     try {
 
-        const { title, description, tag } = req.body;
-        const image = req.file;
-        let uploadImage;
+        const { title, description, tags } = req.body;
+        //console.log(req.body);
 
-        if (image) {
+        let images = req.files;
+        //console.log(req.files);
 
-            const base64Pdf = `data:${image.mimetype};base64,${image.buffer.toString("base64")}`;
+        let imageArray = [];
 
-            uploadImage = await cloudinary.uploader.upload(base64Pdf, {
-                resource_type: "auto",
-                folder: "uploads/images"
-            });
+        if (images && images.length > 0) {
 
-        }else{
+            for (const image of images) {
+
+                const base64Pdf = `data:${image.mimetype};base64,${image.buffer.toString("base64")}`;
+
+                const uploadImage = await cloudinary.uploader.upload(base64Pdf, {
+                    resource_type: "auto",
+                    folder: "uploads/images"
+                });
+
+                imageArray.push(
+                    {
+                        imageUrl: uploadImage.secure_url,
+                        publicId: uploadImage.public_id
+                    }
+                )
+            }
+
+        } else {
 
             console.log("No file uploaded");
         }
@@ -26,16 +40,13 @@ const UploadImage = async (req, res) => {
         //console.log(uploadImage);
 
         const newMedia = new Media({
-
             title: title,
             description: description,
-            imageUrl: uploadImage.secure_url,
-            publicId: uploadImage.public_id,
-            tag: tag
+            tags: tags,
+            images: imageArray
         });
 
         newMedia.save();
-
 
         res.status(200).json(
             {
@@ -57,39 +68,48 @@ const UploadImage = async (req, res) => {
 const UpdateMedia = async (req, res) => {
     try {
         const { id } = req.params; // Get ID from URL
-        const { title, description, tag } = req.body;
-        const newImageFile = req.file;
+        const { title, description, tags } = req.body;
 
-        // 1. Find the existing media in Database
+        const newImages = req.files;
+
+        let imageArray = [];
+
+        // Find the existing media in Database
         let media = await Media.findById(id);
+
         if (!media) {
-            return res.status(404).json({ message: "Media not found" });
+            return res.status(404).json(
+                { message: "Media not found" }
+            );
         }
 
-        if (newImageFile) {
-            // Delete old image from Cloudinary using its publicId
-            if (media.publicId) {
-                await cloudinary.uploader.destroy(media.publicId);
+        if (newImages && newImages.length > 0) {
+
+            for(const image of newImages){
+
+                const base64Pdf = `data:${image.mimetype};base64,${image.buffer.toString("base64")}`;
+
+                const uploadImage = await cloudinary.uploader.upload(base64Pdf, {
+                    resource_type: "auto",
+                    folder: "uploads/images"
+                });
+
+                imageArray.push(
+                    {
+                        imageUrl: uploadImage.secure_url,
+                        publicId: uploadImage.public_id
+                    }
+                );
             }
-
-            // Upload the new image
-            const base64Image = `data:${newImageFile.mimetype};base64,${newImageFile.buffer.toString("base64")}`;
-            const uploadResponse = await cloudinary.uploader.upload(base64Image, {
-                resource_type: "auto",
-                folder: "uploads/images"
-            });
-
-            // Update image-related fields
-            media.imageUrl = uploadResponse.secure_url;
-            media.publicId = uploadResponse.public_id;
         }
 
-        // 3. Update metadata fields (only if they are provided in request)
+        // Update metadata fields (only if they are provided in request)
         media.title = title || media.title;
         media.description = description || media.description;
-        media.tag = tag || media.tag;
+        media.tags = media.tags.concat(tags);
+        media.images = imageArray || media.images;
 
-        // 4. Save the updated document
+        // Save the updated document
         const updatedMedia = await media.save();
 
         res.status(200).json({
@@ -128,20 +148,21 @@ const DeleteMedia = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // 1. Find the media first to get the Cloudinary Public ID
+        // Find the media first to get the Cloudinary Public ID
         const media = await Media.findById(id);
 
         if (!media) {
-            return res.status(404).json({ message: "Media not found" });
+            return res.status(404).json(
+                { message: "Media not found" }
+            );
         }
 
-        // 2. Delete the image from Cloudinary
-        // We use the publicId stored during the upload process
+        // Delete the image from Cloudinary
         if (media.publicId) {
             await cloudinary.uploader.destroy(media.publicId);
         }
 
-        // 3. Delete the record from MongoDB
+        // Delete the record from MongoDB
         await Media.findByIdAndDelete(id);
 
         res.status(200).json({
