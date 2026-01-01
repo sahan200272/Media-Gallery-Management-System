@@ -1,5 +1,6 @@
 const User = require("../../models/user");
 const bcrypt = require("bcrypt");
+const sendOTP = require("../../utils/sendEmail");
 
 const CreateUser = async (req, res) => {
 
@@ -17,6 +18,11 @@ const CreateUser = async (req, res) => {
 
         } else {
 
+            // Generate 6-digit OTP
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+            await sendOTP(email, otp);
+
             const hashedPassword = await bcrypt.hash(password, 10);
 
             const newUser = new User({
@@ -33,6 +39,7 @@ const CreateUser = async (req, res) => {
                 })
             }
         }
+
     }catch(error){
         console.error(error.message);
         res.status(500).json({
