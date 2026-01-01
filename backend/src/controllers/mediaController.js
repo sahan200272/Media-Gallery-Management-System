@@ -5,9 +5,11 @@ const UploadImage = async (req, res) => {
 
     try {
 
-        const { title, description, tag } = req.body;
+        const { title, description, tags } = req.body;
+        //console.log(req.body);
 
         let images = req.files;
+        //console.log(req.files);
 
         let imageArray = [];
 
@@ -40,7 +42,7 @@ const UploadImage = async (req, res) => {
         const newMedia = new Media({
             title: title,
             description: description,
-            tag: tag,
+            tags: tags,
             images: imageArray
         });
 
@@ -66,7 +68,7 @@ const UploadImage = async (req, res) => {
 const UpdateMedia = async (req, res) => {
     try {
         const { id } = req.params; // Get ID from URL
-        const { title, description, tag } = req.body;
+        const { title, description, tags } = req.body;
 
         const newImages = req.files;
 
@@ -104,7 +106,7 @@ const UpdateMedia = async (req, res) => {
         // 3. Update metadata fields (only if they are provided in request)
         media.title = title || media.title;
         media.description = description || media.description;
-        media.tag = tag || media.tag;
+        media.tags = media.tags.concat(tags);
         media.images = imageArray || media.images;
 
         // 4. Save the updated document
