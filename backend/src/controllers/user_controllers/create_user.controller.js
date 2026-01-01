@@ -1,4 +1,5 @@
 const User = require("../../models/user");
+const Verification = require("../../models/verification.model");
 const bcrypt = require("bcrypt");
 const sendOTP = require("../../utils/sendEmail");
 
@@ -25,13 +26,14 @@ const CreateUser = async (req, res) => {
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            const newUser = new User({
+            const tempUser = new Verification({
                 name: name,
                 email: email,
-                password: hashedPassword
+                password: hashedPassword,
+                otp: otp
             })
 
-            const response = newUser.save();
+            const response = tempUser.save();
 
             if (response) {
                 res.status(200).json({
