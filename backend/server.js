@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv")
 
 const ConnectDB = require("./src/config/db");
+const mainRoutes = require("./src/routes/mainRoutes");
 
 dotenv.config();
 const app = express();
@@ -11,9 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.send('Express server is running');
-});
+app.use("/api", mainRoutes);
 
 const PORT = process.env.PORT || 3000;
 
