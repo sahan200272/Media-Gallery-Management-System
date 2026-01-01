@@ -1,11 +1,12 @@
+import React from 'react';
+import Login from './pages/Login';
 
 function App() {
-
   return (
-    <>
-      <h1>Hello</h1>
-    </>
-  )
+    <div>
+      <Login />
+    </div>
+  );
 }
 
-export default App
+export default App;
