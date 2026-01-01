@@ -103,13 +103,13 @@ const UpdateMedia = async (req, res) => {
             }
         }
 
-        // 3. Update metadata fields (only if they are provided in request)
+        // Update metadata fields (only if they are provided in request)
         media.title = title || media.title;
         media.description = description || media.description;
         media.tags = media.tags.concat(tags);
         media.images = imageArray || media.images;
 
-        // 4. Save the updated document
+        // Save the updated document
         const updatedMedia = await media.save();
 
         res.status(200).json({
@@ -148,20 +148,21 @@ const DeleteMedia = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // 1. Find the media first to get the Cloudinary Public ID
+        // Find the media first to get the Cloudinary Public ID
         const media = await Media.findById(id);
 
         if (!media) {
-            return res.status(404).json({ message: "Media not found" });
+            return res.status(404).json(
+                { message: "Media not found" }
+            );
         }
 
-        // 2. Delete the image from Cloudinary
-        // We use the publicId stored during the upload process
+        // Delete the image from Cloudinary
         if (media.publicId) {
             await cloudinary.uploader.destroy(media.publicId);
         }
 
-        // 3. Delete the record from MongoDB
+        // Delete the record from MongoDB
         await Media.findByIdAndDelete(id);
 
         res.status(200).json({
