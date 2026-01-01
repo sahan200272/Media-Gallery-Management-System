@@ -66,7 +66,6 @@ const UpdateMedia = async (req, res) => {
             return res.status(404).json({ message: "Media not found" });
         }
 
-        // 2. If a new image is provided, replace the old one in Cloudinary
         if (newImageFile) {
             // Delete old image from Cloudinary using its publicId
             if (media.publicId) {
@@ -106,4 +105,55 @@ const UpdateMedia = async (req, res) => {
     }
 }
 
-module.exports = { UploadImage, UpdateMedia };
+const GetAllMedia = async (req, res) => {
+    try {
+
+        // Fetch from MongoDB, sorted by newest first
+        const mediaList = await Media.find().sort({ createdAt: -1 });
+
+        res.status(200).json({
+            count: mediaList.length,
+            media: mediaList
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Failed to fetch media",
+            error: error.message
+        });
+    }
+}
+
+const DeleteMedia = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // 1. Find the media first to get the Cloudinary Public ID
+        const media = await Media.findById(id);
+
+        if (!media) {
+            return res.status(404).json({ message: "Media not found" });
+        }
+
+        // 2. Delete the image from Cloudinary
+        // We use the publicId stored during the upload process
+        if (media.publicId) {
+            await cloudinary.uploader.destroy(media.publicId);
+        }
+
+        // 3. Delete the record from MongoDB
+        await Media.findByIdAndDelete(id);
+
+        res.status(200).json({
+            message: "Media deleted successfully from cloud and database"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Delete operation failed",
+            error: error.message
+        });
+    }
+};
+
+module.exports = { UploadImage, UpdateMedia, GetAllMedia, DeleteMedia };
