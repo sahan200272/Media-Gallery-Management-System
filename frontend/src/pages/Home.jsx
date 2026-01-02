@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { getAllMedia } from '../services/media';
+import { getAllMedia, uploadMedia } from '../services/media';
 
 const Home = ({ onRegisterClick }) => {
   const [media, setMedia] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedMedia, setSelectedMedia] = useState(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadForm, setUploadForm] = useState({
+    title: '',
+    description: '',
+    tags: '',
+    images: []
+  });
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [uploadSuccess, setUploadSuccess] = useState('');
 
   useEffect(() => {
     fetchMedia();
@@ -31,6 +41,85 @@ const Home = ({ onRegisterClick }) => {
 
   const closeModal = () => {
     setSelectedMedia(null);
+  };
+
+  const handleUploadClick = () => {
+    setShowUploadModal(true);
+    setUploadError('');
+    setUploadSuccess('');
+  };
+
+  const closeUploadModal = () => {
+    setShowUploadModal(false);
+    setUploadForm({
+      title: '',
+      description: '',
+      tags: '',
+      images: []
+    });
+    setUploadError('');
+    setUploadSuccess('');
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUploadForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setUploadForm(prev => ({
+      ...prev,
+      images: Array.from(e.target.files)
+    }));
+  };
+
+  const handleUploadSubmit = async (e) => {
+    e.preventDefault();
+    setUploadError('');
+    setUploadSuccess('');
+
+    if (!uploadForm.title || !uploadForm.description || uploadForm.images.length === 0) {
+      setUploadError('Please fill in all fields and select at least one image');
+      return;
+    }
+
+    setUploadLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('title', uploadForm.title);
+      formData.append('description', uploadForm.description);
+      
+      // Convert tags string to array and append
+      const tagsArray = uploadForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+      formData.append('tags', JSON.stringify(tagsArray));
+
+      // Append all images
+      uploadForm.images.forEach((image) => {
+        formData.append('images', image);
+      });
+
+      await uploadMedia(formData);
+      
+      setUploadSuccess('Media uploaded successfully!');
+      
+      // Refresh media list
+      await fetchMedia();
+      
+      // Close modal after 1.5 seconds
+      setTimeout(() => {
+        closeUploadModal();
+      }, 1500);
+      
+    } catch (err) {
+      setUploadError(err.response?.data?.message || 'Upload failed. Please try again.');
+      console.error('Upload error:', err);
+    } finally {
+      setUploadLoading(false);
+    }
   };
 
   if (loading) {
@@ -69,7 +158,10 @@ const Home = ({ onRegisterClick }) => {
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold text-gray-900">Media Gallery</h1>
             <div className="flex gap-3">
-              <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+              <button 
+                onClick={handleUploadClick}
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
                 Upload Media
               </button>
               <button 
@@ -233,6 +325,133 @@ const Home = ({ onRegisterClick }) => {
                   minute: '2-digit'
                 })}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upload Modal */}
+      {showUploadModal && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
+          onClick={closeUploadModal}
+        >
+          <div
+            className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              {/* Modal Header */}
+              <div className="flex justify-between items-start mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">Upload Media</h2>
+                <button
+                  onClick={closeUploadModal}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Messages */}
+              {uploadError && (
+                <div className="mb-4 p-3 bg-red-100 text-red-800 rounded-lg text-sm">
+                  {uploadError}
+                </div>
+              )}
+              {uploadSuccess && (
+                <div className="mb-4 p-3 bg-green-100 text-green-800 rounded-lg text-sm">
+                  {uploadSuccess}
+                </div>
+              )}
+
+              {/* Upload Form */}
+              <form onSubmit={handleUploadSubmit} className="space-y-5">
+                <div>
+                  <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                    Title *
+                  </label>
+                  <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value={uploadForm.title}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="Enter media title"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                    Description *
+                  </label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    value={uploadForm.description}
+                    onChange={handleInputChange}
+                    rows="4"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="Enter media description"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
+                    Tags (comma separated)
+                  </label>
+                  <input
+                    type="text"
+                    id="tags"
+                    name="tags"
+                    value={uploadForm.tags}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="e.g., nature, landscape, photography"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-2">
+                    Images * (Multiple files allowed)
+                  </label>
+                  <input
+                    type="file"
+                    id="images"
+                    name="images"
+                    onChange={handleFileChange}
+                    multiple
+                    accept="image/*"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    required
+                  />
+                  {uploadForm.images.length > 0 && (
+                    <p className="mt-2 text-sm text-gray-600">
+                      {uploadForm.images.length} file(s) selected
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <button
+                    type="submit"
+                    disabled={uploadLoading}
+                    className="flex-1 bg-purple-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {uploadLoading ? 'Uploading...' : 'Upload Media'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={closeUploadModal}
+                    disabled={uploadLoading}
+                    className="px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
