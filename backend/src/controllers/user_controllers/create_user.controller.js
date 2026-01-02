@@ -1,10 +1,12 @@
 const User = require("../../models/user");
+const Verification = require("../../models/verification.model");
 const bcrypt = require("bcrypt");
+const sendOTP = require("../../utils/sendEmail");
 
 const CreateUser = async (req, res) => {
 
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
         //console.log(req.body);
 
         const user = await User.findOne({ email });
@@ -17,15 +19,22 @@ const CreateUser = async (req, res) => {
 
         } else {
 
+            // Generate 6-digit OTP
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+            await sendOTP(email, otp);
+
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            const newUser = new User({
+            const tempUser = new Verification({
                 name: name,
                 email: email,
-                password: hashedPassword
+                password: hashedPassword,
+                role: role,
+                otp: otp
             })
 
-            const response = newUser.save();
+            const response = tempUser.save();
 
             if (response) {
                 res.status(200).json({
@@ -33,6 +42,7 @@ const CreateUser = async (req, res) => {
                 })
             }
         }
+
     }catch(error){
         console.error(error.message);
         res.status(500).json({
