@@ -27,7 +27,8 @@ const VerifyOTP = async (req, res) => {
         const newUser = new User({
             name: tempUser.name,
             email: tempUser.email,
-            password: tempUser.password
+            password: tempUser.password,
+            role: tempUser.role
         });
 
         await newUser.save();

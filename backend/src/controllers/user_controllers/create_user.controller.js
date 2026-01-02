@@ -6,7 +6,7 @@ const sendOTP = require("../../utils/sendEmail");
 const CreateUser = async (req, res) => {
 
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
         //console.log(req.body);
 
         const user = await User.findOne({ email });
@@ -30,6 +30,7 @@ const CreateUser = async (req, res) => {
                 name: name,
                 email: email,
                 password: hashedPassword,
+                role: role,
                 otp: otp
             })
 
