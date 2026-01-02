@@ -13,17 +13,17 @@ const api = axios.create({
 // Register new user
 export const registerUser = async (userData) => {
   try {
-    const response = await api.post('/users/create', userData);
+    const response = await api.post('/user/create', userData);
     return response.data;
   } catch (error) {
-    throw error;
+    console.log(error.message);
   }
 };
 
 // Verify OTP
 export const verifyOTP = async (data) => {
   try {
-    const response = await api.post('/users/verify', data);
+    const response = await api.post('/user/verify', data);
     return response.data;
   } catch (error) {
     throw error;
@@ -33,7 +33,7 @@ export const verifyOTP = async (data) => {
 // Forgot Password
 export const forgotPassword = async (email) => {
   try {
-    const response = await api.post('/users/forgot', { email });
+    const response = await api.post('/user/forgot', { email });
     return response.data;
   } catch (error) {
     throw error;
@@ -43,7 +43,7 @@ export const forgotPassword = async (email) => {
 // Reset Password
 export const resetPassword = async (data) => {
   try {
-    const response = await api.post('/users/reset', data);
+    const response = await api.post('/user/reset', data);
     return response.data;
   } catch (error) {
     throw error;
@@ -53,7 +53,7 @@ export const resetPassword = async (data) => {
 // Login user (if you need to add traditional login later)
 export const loginUser = async (credentials) => {
   try {
-    const response = await api.post('/users/login', credentials);
+    const response = await api.post('/user/login', credentials);
     return response.data;
   } catch (error) {
     throw error;

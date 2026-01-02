@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Login from './pages/Login';
+import Home from './pages/Home';
 import Register from './pages/Register';
 import VerifyOTP from './pages/VerifyOTP';
 
 function App() {
-  const [currentView, setCurrentView] = useState('register'); // 'login', 'register', 'verify'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'register', 'verify'
   const [userEmail, setUserEmail] = useState('');
 
   const handleRegistrationSuccess = (email) => {
@@ -13,7 +13,7 @@ function App() {
   };
 
   const handleVerificationSuccess = () => {
-    setCurrentView('login');
+    setCurrentView('home');
   };
 
   const handleResendOTP = async () => {
@@ -23,7 +23,7 @@ function App() {
 
   return (
     <div className="app">
-      {currentView === 'login' && <Login />}
+      {currentView === 'home' && <Home onRegisterClick={() => setCurrentView('register')} />}
       {currentView === 'register' && (
         <Register onSuccess={handleRegistrationSuccess} />
       )}
@@ -34,19 +34,6 @@ function App() {
           onResend={handleResendOTP}
         />
       )}
-
-      {/* Simple navigation */}
-      <div style={{ 
-        position: 'fixed', 
-        bottom: '20px', 
-        left: '50%', 
-        transform: 'translateX(-50%)',
-        display: 'flex',
-        gap: '10px'
-      }}>
-        <button onClick={() => setCurrentView('login')}>Login</button>
-        <button onClick={() => setCurrentView('register')}>Register</button>
-      </div>
     </div>
   );
 }

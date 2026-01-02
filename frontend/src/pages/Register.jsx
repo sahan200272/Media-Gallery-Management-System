@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { registerUser } from '../services/auth';
 
 const Register = ({ onSuccess }) => {
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,11 +16,14 @@ const Register = ({ onSuccess }) => {
   const [message, setMessage] = useState({ type: '', text: '' });
 
   const handleChange = (e) => {
+
     const { name, value } = e.target;
+
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+
     // Clear error for this field
     if (errors[name]) {
       setErrors(prev => ({
@@ -57,6 +61,7 @@ const Register = ({ onSuccess }) => {
   };
 
   const handleSubmit = async (e) => {
+    
     e.preventDefault();
     setMessage({ type: '', text: '' });
 

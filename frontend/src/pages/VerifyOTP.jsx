@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { verifyOTP } from '../services/auth';
 
 const VerifyOTP = ({ email, onSuccess, onResend }) => {
+    
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
