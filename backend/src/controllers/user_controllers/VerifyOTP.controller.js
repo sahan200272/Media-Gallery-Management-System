@@ -1,5 +1,6 @@
 const User = require("../../models/user");
 const Verification = require("../../models/verification.model");
+const { generateToken } = require("../../utils/jwt.util");
 
 const VerifyOTP = async (req, res) => {
     try {
@@ -28,7 +29,8 @@ const VerifyOTP = async (req, res) => {
             name: tempUser.name,
             email: tempUser.email,
             password: tempUser.password,
-            role: tempUser.role
+            role: tempUser.role,
+            token: generateToken(tempUser._id)
         });
 
         await newUser.save();

@@ -68,13 +68,13 @@ function MediaGallery(){
                             <p className="text-gray-600 mt-1">Browse your collection</p>
                         </div>
                         <button 
-                            onClick={() => navigate('/add-media')}
+                            onClick={() => navigate('/profile')}
                             className="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                             </svg>
-                            Add Media
+                            User Profile
                         </button>
                     </div>
                 </div>
