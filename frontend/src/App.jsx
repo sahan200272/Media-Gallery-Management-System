@@ -7,6 +7,7 @@ import UserProfile from './pages/User_Profile';
 import LoginUser from './components/Login_User_Form';
 import ContactForm from './components/Contact_Form';
 import EditContact from './components/Edit_Contact_Form';
+import GetAllContacts from './pages/All_Contacts';
 
 function App() {
   
@@ -21,6 +22,7 @@ function App() {
         <Route path='/profile' element={<UserProfile/>}/>
         <Route path='/contact' element={<ContactForm/>}/>
         <Route path='/contact/edit' element={<EditContact/>}/>
+        <Route path='/contact/get-all' element={<GetAllContacts/>}/>
       </Routes>
     </BrowserRouter>
   )

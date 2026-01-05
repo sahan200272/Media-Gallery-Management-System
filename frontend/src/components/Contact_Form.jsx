@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 export default function ContactForm(){
 
     const VITE_BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL;
+
+    const navigate = useNavigate()
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -24,6 +27,7 @@ export default function ContactForm(){
 
             if(response.status == 200){
                 alert(response.data.message);
+                navigate("/contact/get-all")
             }
 
         } catch (error) {
