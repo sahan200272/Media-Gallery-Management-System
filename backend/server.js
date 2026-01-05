@@ -1,16 +1,23 @@
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv")
+const dotenv = require("dotenv");
+const passport = require("passport");
+
+// Load environment variables FIRST before requiring passport
+dotenv.config();
+
+// Now require passport config (it needs env variables)
+require("./src/config/passport");
 
 const ConnectDB = require("./src/config/db");
 const mainRoutes = require("./src/routes/mainRoutes");
 
-dotenv.config();
 const app = express();
 
 // middlewares (between request and logic)
 app.use(express.json());
 app.use(cors());
+app.use(passport.initialize());
 
 app.use("/api", mainRoutes);
 

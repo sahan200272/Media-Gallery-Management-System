@@ -1,41 +1,29 @@
-import React, { useState } from 'react';
-import Home from './pages/Home';
-import Register from './pages/Register';
-import VerifyOTP from './pages/VerifyOTP';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AddMedia from './components/Add_Media_Form';
+import MediaGallery from './pages/media_gallery';
+import RegisterUser from './components/Register_User_Form';
+import VerifyOTP from './components/Otp_Verification';
+import UserProfile from './pages/User_Profile';
+import LoginUser from './components/Login_User_Form';
+import ContactForm from './components/Contact_Form';
+import EditContact from './components/Edit_Contact_Form';
 
 function App() {
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'register', 'verify'
-  const [userEmail, setUserEmail] = useState('');
-
-  const handleRegistrationSuccess = (email) => {
-    setUserEmail(email);
-    setCurrentView('verify');
-  };
-
-  const handleVerificationSuccess = () => {
-    setCurrentView('home');
-  };
-
-  const handleResendOTP = async () => {
-    // You can call registerUser again with stored data if needed
-    alert('OTP resent! (Implement resend logic)');
-  };
-
-  return (
-    <div className="app">
-      {currentView === 'home' && <Home onRegisterClick={() => setCurrentView('register')} />}
-      {currentView === 'register' && (
-        <Register onSuccess={handleRegistrationSuccess} />
-      )}
-      {currentView === 'verify' && (
-        <VerifyOTP 
-          email={userEmail}
-          onSuccess={handleVerificationSuccess}
-          onResend={handleResendOTP}
-        />
-      )}
-    </div>
-  );
+  
+  return(
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<RegisterUser />}/>
+        <Route path='/login' element={<LoginUser />}/>
+        <Route path='/verify-user' element={<VerifyOTP/>}/>
+        <Route path="/gallery" element={<MediaGallery />} />
+        <Route path="/add-media" element={<AddMedia />} />
+        <Route path='/profile' element={<UserProfile/>}/>
+        <Route path='/contact' element={<ContactForm/>}/>
+        <Route path='/contact/edit' element={<EditContact/>}/>
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App;

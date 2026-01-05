@@ -8,7 +8,7 @@ const VerifyOTP = async (req, res) => {
         // Find the temporary record
         const tempUser = await Verification.findOne({ email });
 
-        if (!tempUser) {
+        if (!tempUser) { 
             return res.status(400).json(
                 {
                     message: "OTP expired or invalid"
@@ -28,7 +28,7 @@ const VerifyOTP = async (req, res) => {
             name: tempUser.name,
             email: tempUser.email,
             password: tempUser.password,
-            role: tempUser.role
+            role: tempUser.role,
         });
 
         await newUser.save();
