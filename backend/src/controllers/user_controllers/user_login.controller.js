@@ -25,7 +25,7 @@ const UserLogin = async (req, res) => {
         else {
 
             res.json({
-                "message": "Wrong Email"
+                "message": "You don't have an account or wrong email"
             })
         }
     } catch (error) {

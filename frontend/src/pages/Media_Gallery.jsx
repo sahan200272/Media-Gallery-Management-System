@@ -38,7 +38,7 @@ function MediaGallery(){
 
     if(isLoading){
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
                     <h1 className="mt-4 text-xl font-semibold text-gray-700">Loading...</h1>
@@ -49,7 +49,7 @@ function MediaGallery(){
 
     if(error){
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-red-600">Error: {error.message}</h1>
                 </div>
@@ -58,7 +58,7 @@ function MediaGallery(){
     }
 
     return(
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -68,13 +68,10 @@ function MediaGallery(){
                             <p className="text-gray-600 mt-1">Browse your collection</p>
                         </div>
                         <button 
-                            onClick={() => navigate('/profile')}
+                            onClick={() => navigate('/contact')}
                             className="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
                         >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                            </svg>
-                            User Profile
+                            Contact
                         </button>
                     </div>
                 </div>

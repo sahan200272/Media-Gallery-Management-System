@@ -54,12 +54,12 @@ export default function RegisterUser(){
     }
 
     return(
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md mx-auto">
                 <div className="bg-white rounded-2xl shadow-xl p-8">
                     {/* Header */}
                     <div className="mb-8 text-center">
-                        <div className="mx-auto h-16 w-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4">
+                        <div className="mx-auto h-16 w-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mb-4">
                             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
@@ -79,7 +79,7 @@ export default function RegisterUser(){
                                 placeholder="Enter Your Name"
                                 onChange={(e) => setName(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                             />
                         </div>
 
@@ -93,7 +93,7 @@ export default function RegisterUser(){
                                 placeholder="Enter Your Email Here"    
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                             />
                         </div>
 
@@ -107,7 +107,7 @@ export default function RegisterUser(){
                                 placeholder="Enter Password"  
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                             />
                         </div>
 
@@ -121,22 +121,23 @@ export default function RegisterUser(){
                                 placeholder="Enter Password Again"
                                 onChange={(e) => setComPassword(e.target.value)}
                                 required
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                             />
                         </div>
 
                         {/* Submit Button */}
+                        <a href="/verify-user">
                         <button 
                             type="submit"
-                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         >
                             Create Account
-                        </button>
+                        </button></a>
 
                         {/* Additional Links */}
                         <div className="text-center text-sm text-gray-600">
                             Already have an account?{' '}
-                            <a href="#" className="text-purple-600 hover:text-purple-800 font-semibold">
+                            <a href="/login" className="text-indigo-600 hover:text-indigo-800 font-semibold">
                                 Sign in
                             </a>
                         </div>

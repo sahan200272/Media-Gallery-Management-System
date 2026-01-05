@@ -1,6 +1,5 @@
 const User = require("../../models/user");
 const Verification = require("../../models/verification.model");
-const { generateToken } = require("../../utils/jwt.util");
 
 const VerifyOTP = async (req, res) => {
     try {
@@ -9,7 +8,7 @@ const VerifyOTP = async (req, res) => {
         // Find the temporary record
         const tempUser = await Verification.findOne({ email });
 
-        if (!tempUser) {
+        if (!tempUser) { 
             return res.status(400).json(
                 {
                     message: "OTP expired or invalid"
@@ -30,7 +29,6 @@ const VerifyOTP = async (req, res) => {
             email: tempUser.email,
             password: tempUser.password,
             role: tempUser.role,
-            token: generateToken(tempUser._id)
         });
 
         await newUser.save();

@@ -28,8 +28,8 @@ export default function VerifyOTP(){
             console.log(response.data.message);
             alert(response.data.message || "Verification successful!");
             
-            // Navigate to login or home page after successful verification
-            navigate("/");
+            // Navigate to login page after successful verification
+            navigate("/login");
             
         }catch(error){
 
@@ -84,7 +84,7 @@ export default function VerifyOTP(){
                             type="submit"
                             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         >
-                            Verify Code
+                            Verify Code 
                         </button>
 
                         {/* Additional Options */}

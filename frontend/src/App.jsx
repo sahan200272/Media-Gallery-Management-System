@@ -5,18 +5,22 @@ import RegisterUser from './components/Register_User_Form';
 import VerifyOTP from './components/Otp_Verification';
 import UserProfile from './pages/User_Profile';
 import LoginUser from './components/Login_User_Form';
+import ContactForm from './components/Contact_Form';
+import EditContact from './components/Edit_Contact_Form';
 
 function App() {
   
   return(
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MediaGallery />} />
-        <Route path="/add-media" element={<AddMedia />} />
-        <Route path='/register' element={<RegisterUser />}/>
+        <Route path='/' element={<RegisterUser />}/>
         <Route path='/login' element={<LoginUser />}/>
         <Route path='/verify-user' element={<VerifyOTP/>}/>
+        <Route path="/gallery" element={<MediaGallery />} />
+        <Route path="/add-media" element={<AddMedia />} />
         <Route path='/profile' element={<UserProfile/>}/>
+        <Route path='/contact' element={<ContactForm/>}/>
+        <Route path='/contact/edit' element={<EditContact/>}/>
       </Routes>
     </BrowserRouter>
   )
