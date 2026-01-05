@@ -36,7 +36,7 @@ export default function GetAllContacts(){
                 {/* Header */}
                 <div className="mb-8">
                     <button 
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate('/gallery')}
                         className="text-indigo-600 hover:text-indigo-800 font-medium mb-4 flex items-center gap-2 transition-colors"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
