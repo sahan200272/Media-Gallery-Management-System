@@ -32,8 +32,8 @@ The system uses a decoupled architecture with a **Spring Boot REST API** serving
 | :--- | :--- | :--- |
 | ![Landing](link_to_image) | ![Dashboard](link_to_image) | ![Gallery](link_to_image) |
 
-## 🛠️ Installation & Setup
-1. Clone the repo: `git clone https://github.com/your-username/repo-name.git`
+## 🛠️ Installation & Setups
+1. Clone the repo: `git clone https://github.com/sahan200272/Media-Gallery-Management-System.git`
 2. Configure MongoDB connection in `application.properties`.
 3. Run Spring Boot: `./mvnw spring-boot:run`
 4. Run Frontend: `npm install && npm run dev`
