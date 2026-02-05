@@ -9,7 +9,7 @@ Professional photographers often rely on fragmented social media and manual meth
 - **Client Friction:** Difficulty for clients to view packages or access their digital albums.
 
 ## 💡 The Solution
-StudioFlow transforms manual photography business operations into a streamlined digital experience. It acts as a centralized hub for the studio owner, the crew, and the clients.
+Beni Moments transforms manual photography business operations into a streamlined digital experience. It acts as a centralized hub for the studio owner, the crew, and the clients.
 
 ## 🛠️ Tech Stack
 - **Frontend:** Next.js (React), Tailwind CSS
